@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advance Auto Refresh Settings</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Advance Auto Refresh Settings</h2>
+    <div class="setting">
+      <label>URLs to Refresh</label>
+      <ul id="urlList"></ul>
+      <input type="text" id="newUrl" placeholder="e.g., https://example.com">
+      <button id="addUrl">Add URL</button>
+      <button id="addCurrentUrl">Add Current Tab's URL</button>
+    </div>
+    <div class="setting">
+      <label for="minInterval">Min Interval (seconds)</label>
+      <input type="number" id="minInterval" min="1" placeholder="60">
+    </div>
+    <div class="setting">
+      <label for="maxInterval">Max Interval (seconds)</label>
+      <input type="number" id="maxInterval" min="1" placeholder="120">
+    </div>
+    <div class="setting switch-row">
+      <label>Only Pinned Tabs</label>
+      <label class="switch">
+        <input type="checkbox" id="pinnedOnly">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="setting switch-row">
+      <label>Enable Auto Refresh</label>
+      <label class="switch">
+        <input type="checkbox" id="enabled">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <button id="save">Save Settings</button>
+  </div>
+
+  <div id="save-popup" class="save-popup" aria-live="polite">
+    <span class="checkmark">✔</span>
+    <span class="message">Saved successfully!</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
