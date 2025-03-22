@@ -257,3 +257,16 @@ chrome-action::part(badge) {
   font-weight: bold;
   width: 44px;
 }
+
+.copyright p {
+  margin: 20px 0px 0px 0px;
+  text-align: center;
+  color: #919191;
+}
+.copyright p a {
+  color: #818181;
+  text-decoration: none;
+}
+.copyright p a:hover {
+  color: #474747;
+}
