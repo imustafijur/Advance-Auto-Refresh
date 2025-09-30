@@ -8,14 +8,28 @@
 </head>
 <body>
   <div class="container">
-    <h2>Advance Auto Refresh Settings</h2>
+    <h2>Advance Auto Refresh</h2>
+    
     <div class="setting">
       <label>Target URLs / Domains</label>
-      <ul id="urlList"></ul>
+      <ul id="urlList" class="url-display-list"></ul>
       <input type="text" id="newUrl" placeholder="e.g., https://example.com">
-      <button id="addUrl">Add URL</button>
-      <button id="addCurrentUrl">Add Current Tab's URL</button>
+      <div class="button-group">
+        <button id="addUrl" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.25 12.75V18H12.75V12.75H18V11.25H12.75V6H11.25V11.25H6V12.75H11.25Z"/>
+          </svg>
+          <span>Add URL</span>
+        </button>
+        <button id="addCurrentUrl" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 11V12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12V11M8 11L12 15M12 15L16 11M12 15V3"/>
+          </svg>
+          <span>Add Current</span>
+        </button>
+      </div>
     </div>
+    
     <div class="setting">
       <label for="minInterval">Min Interval (seconds)</label>
       <input type="number" id="minInterval" min="1" placeholder="60">
@@ -24,6 +38,7 @@
       <label for="maxInterval">Max Interval (seconds)</label>
       <input type="number" id="maxInterval" min="1" placeholder="120">
     </div>
+
     <div class="setting switch-row">
       <label>Only Pinned Tabs (Refresh Mode)</label>
       <label class="switch">
@@ -32,7 +47,8 @@
       </label>
     </div>
     <hr>
-     <div class="setting switch-row">
+    
+    <div class="setting switch-row">
       <label><strong>Enable Randomizer Mode</strong></label>
       <label class="switch">
         <input type="checkbox" id="randomizerEnabled">
@@ -40,10 +56,26 @@
       </label>
     </div>
     <div class="setting" id="randomUrlSection">
-      <label for="randomUrlList">Random URL List (one per line)</label>
-      <textarea id="randomUrlList" rows="6" placeholder="https://example.com/page1&#x0a;https://example.com/page2"></textarea>
+      <label>Random URL List</label>
+      <ul id="randomUrlDisplayList" class="url-display-list"></ul>
+      <textarea id="newRandomUrl" rows="3" placeholder="Add one or more URLs (one per line)"></textarea>
+       <div class="button-group">
+        <button id="addRandomUrl" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.25 12.75V18H12.75V12.75H18V11.25H12.75V6H11.25V11.25H6V12.75H11.25Z"/>
+          </svg>
+          <span>Add URL(s)</span>
+        </button>
+        <button id="addCurrentRandomUrl" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 11V12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12V11M8 11L12 15M12 15L16 11M12 15V3"/>
+          </svg>
+          <span>Add Current</span>
+        </button>
+      </div>
     </div>
     <hr>
+    
     <div class="setting switch-row">
       <label>Enable Extension</label>
       <label class="switch">
@@ -51,12 +83,14 @@
         <span class="slider"></span>
       </label>
     </div>
-    <button id="save">Save Settings</button>
+    <button id="save" class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" /></svg>
+      <span>Save Settings</span>
+    </button>
     <div class="copyright">
       <p>All copyrights reserved © <span id="year"></span> – <a href="https://mustafijur.org/">Mustafijur Rahman</a> CEO and Founder of <a target="_blank" href="https://www.soovex.com/">Soovex IT Agency</a></p>
     </div>
   </div>
-
 
   <div id="save-popup" class="save-popup" aria-live="polite">
     <span class="checkmark">✔</span>
