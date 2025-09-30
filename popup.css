@@ -28,6 +28,14 @@ h2 {
   margin-bottom: 24px;
 }
 
+hr {
+    border: none;
+    height: 1px;
+    background-color: #e5e5ea;
+    margin: 25px 0;
+}
+
+
 label {
   display: block;
   font-size: 15px;
@@ -37,7 +45,8 @@ label {
 }
 
 input[type="text"], 
-input[type="number"] {
+input[type="number"],
+textarea {
   width: 100%;
   padding: 12px 16px;
   border: 1px solid #c7c7cc;
@@ -46,10 +55,18 @@ input[type="number"] {
   margin: 8px 0;
   background: #ffffff;
   transition: all 0.2s ease;
+  font-family: inherit;
 }
 
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+
 input[type="text"]:focus, 
-input[type="number"]:focus {
+input[type="number"]:focus,
+textarea:focus {
   outline: none;
   border-color: #007aff;
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
@@ -182,6 +199,10 @@ input:checked + .slider:before {
 
 #newUrl {
   margin-bottom: 12px;
+}
+
+#randomUrlSection {
+  display: none; /* Hidden by default */
 }
 
 .button-group {

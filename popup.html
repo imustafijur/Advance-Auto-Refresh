@@ -10,7 +10,7 @@
   <div class="container">
     <h2>Advance Auto Refresh Settings</h2>
     <div class="setting">
-      <label>URLs to Refresh</label>
+      <label>Target URLs / Domains</label>
       <ul id="urlList"></ul>
       <input type="text" id="newUrl" placeholder="e.g., https://example.com">
       <button id="addUrl">Add URL</button>
@@ -25,14 +25,27 @@
       <input type="number" id="maxInterval" min="1" placeholder="120">
     </div>
     <div class="setting switch-row">
-      <label>Only Pinned Tabs</label>
+      <label>Only Pinned Tabs (Refresh Mode)</label>
       <label class="switch">
         <input type="checkbox" id="pinnedOnly">
         <span class="slider"></span>
       </label>
     </div>
+    <hr>
+     <div class="setting switch-row">
+      <label><strong>Enable Randomizer Mode</strong></label>
+      <label class="switch">
+        <input type="checkbox" id="randomizerEnabled">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="setting" id="randomUrlSection">
+      <label for="randomUrlList">Random URL List (one per line)</label>
+      <textarea id="randomUrlList" rows="6" placeholder="https://example.com/page1&#x0a;https://example.com/page2"></textarea>
+    </div>
+    <hr>
     <div class="setting switch-row">
-      <label>Enable Auto Refresh</label>
+      <label>Enable Extension</label>
       <label class="switch">
         <input type="checkbox" id="enabled">
         <span class="slider"></span>
@@ -40,7 +53,7 @@
     </div>
     <button id="save">Save Settings</button>
     <div class="copyright">
-      <p>All copyrights reserved © 2025 – <a target="_blank" href="https://www.soovex.com/">Soovex IT Agency</a></p>
+      <p>All copyrights reserved © <span id="year"></span> – <a href="https://mustafijur.org/">Mustafijur Rahman</a> CEO and Founder of <a target="_blank" href="https://www.soovex.com/">Soovex IT Agency</a></p>
     </div>
   </div>
 

@@ -1,8 +1,24 @@
 let refreshTimeouts = {};
 let scheduledRefreshes = {};
 
+// --- Main Control Functions ---
+
+// Starts the extension's main logic based on saved settings
+function initialize() {
+  chrome.storage.sync.get(['enabled', 'randomizerEnabled'], (settings) => {
+    stopAllActivity(); // Stop everything before starting
+    if (settings.enabled) {
+      if (settings.randomizerEnabled) {
+        startRandomizer();
+      } else {
+        startClassicRefresh();
+      }
+    }
+  });
+}
+
 // Function to clear all existing timeouts
-function clearAllTimeouts() {
+function stopAllActivity() {
   for (const tabId in refreshTimeouts) {
     clearTimeout(refreshTimeouts[tabId]);
   }
@@ -11,101 +27,136 @@ function clearAllTimeouts() {
   updateBadge();
 }
 
-// Function to schedule a refresh for a tab
-function scheduleRefresh(tabId) {
+// --- Classic Refresh Mode ---
+
+async function startClassicRefresh() {
+  const tabs = await chrome.tabs.query({});
+  for (const tab of tabs) {
+    const matches = await matchesClassicCriteria(tab);
+    if (matches) {
+      scheduleClassicRefresh(tab.id);
+    }
+  }
+}
+
+function scheduleClassicRefresh(tabId) {
   chrome.storage.sync.get(['minInterval', 'maxInterval'], (settings) => {
-    const min = settings.minInterval || 60; // Default: 60 seconds
-    const max = settings.maxInterval || 120; // Default: 120 seconds
-    const interval = Math.random() * (max - min) + min; // Random interval for this tab
+    const min = settings.minInterval || 60;
+    const max = settings.maxInterval || 120;
+    const interval = Math.random() * (max - min) + min;
     const scheduledTime = Date.now() + interval * 1000;
+
     const timeoutId = setTimeout(() => {
       chrome.tabs.reload(tabId, {}, () => {
+        if (chrome.runtime.lastError) {
+          return cleanUpTab(tabId);
+        }
         chrome.tabs.get(tabId, (tab) => {
-          if (tab) {
-            matchesCriteria(tab).then((matches) => {
-              if (matches) {
-                scheduleRefresh(tabId); // Schedule the next refresh
-              } else {
-                delete refreshTimeouts[tabId];
-                delete scheduledRefreshes[tabId];
-                updateBadge();
-              }
-            });
-          } else {
-            delete refreshTimeouts[tabId];
-            delete scheduledRefreshes[tabId];
-            updateBadge();
+          if (chrome.runtime.lastError || !tab) {
+            return cleanUpTab(tabId);
           }
+          matchesClassicCriteria(tab).then((matches) => {
+            if (matches) scheduleClassicRefresh(tabId);
+            else cleanUpTab(tabId);
+          });
         });
       });
     }, interval * 1000);
+
     refreshTimeouts[tabId] = timeoutId;
     scheduledRefreshes[tabId] = scheduledTime;
     updateBadge();
-    console.log(`Scheduled refresh for tab ${tabId} in ${interval} seconds`);
   });
 }
 
-// Function to check if a tab matches the refresh criteria
-function matchesCriteria(tab) {
+function matchesClassicCriteria(tab) {
   return new Promise((resolve) => {
     chrome.storage.sync.get(['urls', 'pinnedOnly'], (settings) => {
-      const urls = settings.urls || [];
-      const pinnedOnly = settings.pinnedOnly || false;
-      console.log(`Checking tab ${tab.id}: url=${tab.url}, pinned=${tab.pinned}, pinnedOnly=${pinnedOnly}, matchesURL=${urls.includes(tab.url)}`);
-      if (urls.includes(tab.url)) {
-        resolve(pinnedOnly ? tab.pinned : true);
-      } else {
-        resolve(false);
-      }
+      if (!tab.url) return resolve(false);
+      const urlMatches = (settings.urls || []).some(urlPattern => tab.url.startsWith(urlPattern));
+      if (urlMatches) resolve(settings.pinnedOnly ? tab.pinned : true);
+      else resolve(false);
     });
   });
 }
 
-// Function to start refreshing all matching tabs
-function startRefreshing() {
-  clearAllTimeouts();
-  chrome.tabs.query({}, (tabs) => {
-    let matchingTabs = 0;
-    tabs.forEach((tab) => {
-      matchesCriteria(tab).then((matches) => {
-        if (matches) {
-          matchingTabs++;
-          scheduleRefresh(tab.id);
+// --- Randomizer Mode ---
+
+async function startRandomizer() {
+  const tabs = await chrome.tabs.query({ pinned: true }); // Randomizer only works on pinned tabs
+  for (const tab of tabs) {
+    const matches = await matchesRandomizerCriteria(tab);
+    if (matches) {
+      scheduleRandomNavigation(tab.id);
+    }
+  }
+}
+
+function scheduleRandomNavigation(tabId) {
+  chrome.storage.sync.get(['minInterval', 'maxInterval', 'randomUrlList'], (settings) => {
+    const randomUrls = settings.randomUrlList || [];
+    if (randomUrls.length === 0) return; // Don't schedule if there are no URLs
+
+    const min = settings.minInterval || 60;
+    const max = settings.maxInterval || 120;
+    const interval = Math.random() * (max - min) + min;
+    const scheduledTime = Date.now() + interval * 1000;
+    const nextUrl = randomUrls[Math.floor(Math.random() * randomUrls.length)];
+
+    const timeoutId = setTimeout(() => {
+      chrome.tabs.update(tabId, { url: nextUrl }, () => {
+        if (chrome.runtime.lastError) {
+          return cleanUpTab(tabId);
         }
+        // After navigation, re-check criteria and loop
+        chrome.tabs.get(tabId, (tab) => {
+          if (chrome.runtime.lastError || !tab) {
+            return cleanUpTab(tabId);
+          }
+          matchesRandomizerCriteria(tab).then((matches) => {
+            if (matches) scheduleRandomNavigation(tabId);
+            else cleanUpTab(tabId);
+          });
+        });
       });
-    });
-    console.log(`Found ${matchingTabs} tabs to refresh`);
+    }, interval * 1000);
+
+    refreshTimeouts[tabId] = timeoutId;
+    scheduledRefreshes[tabId] = scheduledTime;
+    updateBadge();
   });
 }
 
-// Function to stop refreshing all tabs
-function stopRefreshing() {
-  clearAllTimeouts();
+function matchesRandomizerCriteria(tab) {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(['urls'], (settings) => {
+      // Must be a pinned tab with a URL
+      if (!tab.pinned || !tab.url) return resolve(false);
+      
+      // The URL must match one of the target domains
+      const urlMatches = (settings.urls || []).some(domain => tab.url.startsWith(domain));
+      resolve(urlMatches);
+    });
+  });
 }
 
-// Function to update the badge based on the active tab
+
+// --- Badge and Cleanup ---
+
 function updateBadge() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs.length > 0) {
-      const activeTabId = tabs[0].id;
-      const scheduledTime = scheduledRefreshes[activeTabId];
-      if (scheduledTime) {
-        const now = Date.now();
-        const secondsUntilRefresh = Math.ceil((scheduledTime - now) / 1000);
-        
-        // Format time with colon
-        const minutes = Math.floor(secondsUntilRefresh / 60);
-        const seconds = secondsUntilRefresh % 60;
-        const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        
-        if (secondsUntilRefresh > 0) {
-          chrome.action.setBadgeText({ text: formattedTime });
-        } else {
-          chrome.action.setBadgeText({ text: '0:00' });
-        }
+    if (tabs.length === 0) return chrome.action.setBadgeText({ text: '' });
+    const activeTabId = tabs[0].id;
+    const scheduledTime = scheduledRefreshes[activeTabId];
+    if (scheduledTime) {
+      const secondsUntil = Math.round((scheduledTime - Date.now()) / 1000);
+      if (secondsUntil > 0) {
+        const minutes = Math.floor(secondsUntil / 60);
+        const seconds = secondsUntil % 60;
+        const formatted = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        chrome.action.setBadgeText({ text: formatted });
       } else {
-        chrome.action.setBadgeText({ text: '' });
+        chrome.action.setBadgeText({ text: '...' }); // Indicate refresh is happening
       }
     } else {
       chrome.action.setBadgeText({ text: '' });
@@ -113,68 +164,58 @@ function updateBadge() {
   });
 }
 
-// Update badge every second
-setInterval(updateBadge, 1000);
-
-// React to storage changes
-chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'sync') {
-    if (changes.enabled) {
-      if (changes.enabled.newValue) {
-        startRefreshing();
-      } else {
-        stopRefreshing();
-      }
-    } else if (changes.urls || changes.minInterval || changes.maxInterval || changes.pinnedOnly) {
-      chrome.storage.sync.get('enabled', (settings) => {
-        if (settings.enabled) {
-          startRefreshing();
-        }
-      });
-    }
-  }
-});
-
-// Handle tab updates (e.g., URL or pinned status changes)
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  console.log(`Tab ${tabId} updated:`, changeInfo);
-  if (changeInfo.url || changeInfo.pinned !== undefined) {
-    matchesCriteria(tab).then((matches) => {
-      if (matches) {
-        if (!refreshTimeouts[tabId]) {
-          scheduleRefresh(tabId);
-        }
-      } else {
-        if (refreshTimeouts[tabId]) {
-          console.log(`Clearing timeout for tab ${tabId}`);
-          clearTimeout(refreshTimeouts[tabId]);
-          delete refreshTimeouts[tabId];
-          delete scheduledRefreshes[tabId];
-          updateBadge();
-        }
-      }
-    });
-  }
-});
-
-// Handle tab closures
-chrome.tabs.onRemoved.addListener((tabId) => {
+function cleanUpTab(tabId) {
   if (refreshTimeouts[tabId]) {
     clearTimeout(refreshTimeouts[tabId]);
     delete refreshTimeouts[tabId];
     delete scheduledRefreshes[tabId];
     updateBadge();
   }
+}
+
+// --- Event Listeners ---
+
+// Create an alarm for updating the badge every second
+chrome.alarms.create('badgeUpdater', { periodInMinutes: 1 / 60 });
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === 'badgeUpdater') updateBadge();
 });
 
-// Handle tab activation to update badge for the new active tab
-chrome.tabs.onActivated.addListener((activeInfo) => {
+// React to storage changes (e.g., settings saved in popup)
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'sync') initialize();
+});
+
+// Handle tab updates (e.g., URL or pinned status changes)
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' || changeInfo.pinned !== undefined) {
+    chrome.storage.sync.get(['enabled', 'randomizerEnabled'], (settings) => {
+        if (!settings.enabled) return;
+
+        const checkCriteria = settings.randomizerEnabled ? matchesRandomizerCriteria : matchesClassicCriteria;
+        const scheduleNext = settings.randomizerEnabled ? scheduleRandomNavigation : scheduleClassicRefresh;
+
+        checkCriteria(tab).then((matches) => {
+            if (matches && !refreshTimeouts[tabId]) {
+                scheduleNext(tabId); // Start activity if it now matches
+            } else if (!matches && refreshTimeouts[tabId]) {
+                cleanUpTab(tabId); // Stop activity if it no longer matches
+            }
+        });
+    });
+  }
+});
+
+// Handle tab closures
+chrome.tabs.onRemoved.addListener((tabId) => {
+  cleanUpTab(tabId);
+});
+
+// Update badge when switching tabs
+chrome.tabs.onActivated.addListener(() => {
   updateBadge();
 });
 
-// Start refreshing on browser launch if enabled
-chrome.storage.sync.get('enabled', (settings) => {
-  if (settings.enabled) {
-    startRefreshing();
-  }
-});
+// Initialize on browser startup or extension installation
+chrome.runtime.onStartup.addListener(initialize);
+chrome.runtime.onInstalled.addListener(initialize);
