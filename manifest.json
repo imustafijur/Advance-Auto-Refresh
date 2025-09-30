@@ -1,5 +1,5 @@
 {
-  "manifest_version": 4,
+  "manifest_version": 3,
   "name": "Advance Auto Refresh Extension",
   "version": "1.4",
   "description": "Auto refresh tabs with random intervals with Filters and many more features.",
@@ -27,3 +27,4 @@
   }
 
 }
+
