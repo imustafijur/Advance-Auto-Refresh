@@ -1,83 +1,91 @@
 # Advance Auto Refresh
 ### by Mustafijur Rahman
 
-An advanced Chrome extension to automatically refresh or navigate tabs using random intervals, with powerful controls for pinned tabs and specific domains.
+Welcome to Advance Auto Refresh, the most powerful and user-friendly tool to automatically refresh your browser tabs. Whether you need to monitor a webpage for changes, cycle through dashboards, or automate simple navigation, this extension has you covered with a beautiful and intuitive interface.
 
 ![Extension Popup Interface](icons/Screenshot.png)
 
----
+## Table of Contents
 
-## 🌟 Overview
+-   [Key Features](#key-features)
+-   [How to Use Advance Auto Refresh](#how-to-use-advance-auto-refresh)
+    -   [Enabling the Extension](#enabling-the-extension)
+    -   [Choosing Your Operation Mode](#choosing-your-operation-mode)
+    -   [Using Classic Mode (Simple Refreshing)](#using-classic-mode-simple-refreshing)
+    -   [Using Advanced Mode (Powerful Automation)](#using-advanced-mode-powerful-automation)
+-   [License](#license)
+-   [Copyright](#copyright)
 
-**Advance Auto Refresh** is a powerful browser tool designed for users who need to keep web pages updated or cycle through a list of specific URLs automatically. It goes beyond simple refreshing by offering two distinct modes of operation—**Classic Refresh** and the new **Randomizer Mode**—each with its own set of customizable rules.
+## Key Features
 
-Whether you're monitoring dynamic content or automating navigation, this extension provides a flexible and user-friendly solution.
+-   **Two Powerful Modes**: Choose between a simple **Classic Mode** for quickly refreshing a list of sites, or an **Advanced Mode** for customizing the behavior of each URL individually.
+-   **Randomized Intervals**: Make your refreshes look more natural by setting a minimum and maximum time. The extension will pick a random interval within that range for each refresh.
+-   **Three Unique Actions**: Go beyond simple reloading!
+    -   **Standard Reload**: The classic page refresh.
+    -   **Random URL Pool**: Provide a list of URLs and the extension will cycle through them, navigating to a new random one from your list at each interval.
+    -   **Click Path Automation**: Tell the extension to automatically click a specific link on a page for you. Perfect for navigating through image galleries, forum pages, or auction listings.
+-   **Smart Behavior Controls**:
+    -   **Pause When Active**: To save resources and prevent interruptions, the extension can automatically pause its timer for a tab while you are actively viewing it.
+    -   **Pinned Tab Only**: Restrict the extension to only work on tabs you have pinned.
+    -   **Auto-Pinning**: Automatically pin a tab as soon as it matches one of your target URLs in Advanced Mode.
+-   **Scheduling and Limits**:
+    -   **Daily Action Limit**: Set a maximum number of total refreshes or actions per day to stay in control.
+    -   **Active Hours**: Define a schedule (e.g., from 9:00 AM to 5:00 PM) so the extension only runs when you need it to.
+-   **Helpful Statistics**: See how much work the extension is doing for you with a clean display of today's total actions, the number of active URLs, and the total time the extension has been running.
 
----
+## How to Use Advance Auto Refresh
 
-## ✨ Features
+### Enabling the Extension
 
-This extension is packed with features to give you full control over tab behavior:
+At the very top of the popup, you will see a large toggle switch.
+-   **Click the toggle** to turn the extension on or off globally.
+-   When enabled, the extension will start its timers. When disabled, all activity will stop.
+-   You can see the extension's status (Enabled, Disabled, or time to next refresh) in the badge on the top right.
 
-* **Dual Operation Modes**: Choose between two powerful modes to suit your needs.
-    * **Classic Refresh Mode**: Automatically reloads tabs based on a list of URLs you provide. This is perfect for keeping an eye on live dashboards, social media feeds, or news sites.
-    * **Randomizer Mode**: Navigates a pinned tab to a random URL from a predefined list. This is ideal for tasks like cycling through different profiles, pages, or content on a single domain.
+### Choosing Your Operation Mode
 
-* **Randomized Intervals**: Instead of a fixed time, you can set a **minimum** and **maximum** interval (in seconds). The extension will pick a random time within that range for each action, making the behavior less predictable.
+The extension has two modes. You can switch between them at any time.
 
-* **Pinned Tab Targeting**: Both modes have a strong focus on **pinned tabs**.
-    * In Classic Refresh mode, you can choose to refresh *only* the pinned tabs that match your URL list.
-    * Randomizer mode works **exclusively** on pinned tabs, giving you a dedicated workspace for its operation.
+1.  **Classic Refresh**: Best for when you want to refresh one or more tabs using the same time interval. It's quick and simple.
+2.  **Advanced Refresh**: Best for when you need more control. Use this if you want different timers for different websites, or if you want to use advanced features like the Random URL Pool or Click Path.
 
-* **Domain & URL Filtering**:
-    * In **Classic Refresh** mode, you provide a list of specific URLs to be reloaded.
-    * In **Randomizer** mode, you provide a list of **target domains** (e.g., `https://www.facebook.com`) and a separate list of **specific pages** to visit on those domains. The extension will only affect pinned tabs that match one of your target domains.
+### Using Classic Mode (Simple Refreshing)
 
-* **Intuitive UI**: A clean and simple popup allows you to:
-    * Easily add or remove target URLs/domains.
-    * Add the current tab's domain with a single click.
-    * Configure time intervals and modes.
-    * Enable or disable the extension globally.
+1.  **Select "Classic Refresh"** from the Operation Mode selector.
+2.  **Add Target URLs**: In the "Target URLs" box, type or paste the web addresses you want to refresh. You can add multiple URLs, just put each one on a new line. You can also click the `+ Add Current` button to automatically add the URL of the tab you are currently viewing.
+3.  **Set Refresh Intervals**: In the "Refresh Intervals" section, enter the minimum and maximum time in seconds. The extension will refresh your pages at a random time between these two values.
+4.  **Set Pin Options (Optional)**: If you only want the extension to refresh tabs that are pinned, check the box for "Only affect pinned tabs".
+5.  **Click "Save Settings"**.
 
-* **Countdown Badge**: The extension icon displays a live countdown timer, showing you exactly when the next refresh or navigation will occur on your currently active tab.
+### Using Advanced Mode (Powerful Automation)
 
----
+Advanced mode is organized by "URL Cards". Each card contains the settings for one specific website or task.
 
-## 🚀 How to Use
+1.  **Select "Advanced Refresh"** from the Operation Mode selector.
+2.  **Add a URL Card**: Click the `+ Add New URL` button to create a blank card, or click `+ Add Current` to create a card pre-filled with the URL of your current tab.
+3.  **Configure the Card**:
+    -   **URL**: Enter the starting URL for your task.
+    -   **Intervals**: Set the Min and Max refresh time (in seconds) specifically for this card.
+    -   **Status Toggle**: You can pause or activate each card individually using the toggle on the right. This is great for temporarily disabling one task without affecting others.
+4.  **Choose an Action**: This is where the magic happens. On each card, you can choose between a simple reload, a Random Pool, or a Click Path. You can only have one active at a time for each card.
+    -   **To Use Random URL Pool**:
+        -   Click the dice icon (🎲). It will become active.
+        -   A text box will appear. Enter a list of URLs (one per line) that you want the extension to cycle through.
+        -   At each interval, the extension will navigate the tab to one of the URLs from this list.
+    -   **To Use Click Path Automation**:
+        -   Click the map icon (🗺️). It will become active.
+        -   A text box will appear. Here, you enter the URL of the link(s) you want the extension to click.
+        -   For example, if you are on `example.com/page1` and you want to click a link that goes to `example.com/page2`, you would put `example.com/page2` in the text box. The extension will find the link on the page and click it for you.
+5.  **Set Global Settings**: In the sections below the URL cards, you can control the overall behavior.
+    -   **Behavior Settings**: Check "Pause when tab is active" if you don't want the timer to run while you're using the tab.
+    -   **Advanced Pin Options**: Choose if you want to only affect pinned tabs, auto-pin new tabs, or unpin tabs when the extension is disabled.
+    -   **Global Limits & Schedule**: Enable and configure daily limits or active hours for all your advanced tasks.
+6.  **Click "Save Settings"** to apply all your changes.
 
-### Setting Up Classic Refresh Mode
+## License
 
-Use this mode to simply reload a list of pages.
+This is a free and open-source extension. You are free to use, modify, and distribute it under the terms of the MIT public license.
 
-1.  Add the full URLs of the pages you want to refresh into the **Target URLs / Domains** list.
-2.  Set your desired **Min Interval** and **Max Interval** in seconds.
-3.  (Optional) Check the **Only Pinned Tabs** box if you only want pinned tabs to be affected.
-4.  Make sure **Enable Randomizer Mode** is turned **off**.
-5.  Turn on **Enable Extension** and click **Save Settings**.
-
-### Setting Up Randomizer Mode
-
-Use this mode to visit a random page from a list on a specific, pinned tab.
-
-1.  In the **Target URLs / Domains** list, add the base domain you want to work on (e.g., `https://www.facebook.com`).
-2.  Turn **on** the **Enable Randomizer Mode** switch. This will automatically select and lock the "Pinned Tabs only" logic.
-3.  In the **Random URL List** text box, paste your full list of specific URLs to visit (one URL per line).
-4.  Set your desired **Min Interval** and **Max Interval**.
-5.  **Pin** the tab(s) on the target domain (e.g., your Facebook tab). The randomizer will take control of this pinned tab.
-6.  Turn on **Enable Extension** and click **Save Settings**. The extension will now randomly navigate the pinned tab to one of the URLs from your list at each interval.
-
----
-
-## 🛠️ Installation
-
-1.  Download or clone this repository to your local machine.
-2.  Open Google Chrome and navigate to `chrome://extensions/`.
-3.  Enable **"Developer mode"** using the toggle switch in the top-right corner.
-4.  Click on the **"Load unpacked"** button.
-5.  Select the directory where you saved the extension files.
-6.  The extension is now installed and ready to use!
-
----
 
 ## ©️ Copyright
 
