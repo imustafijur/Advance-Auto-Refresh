@@ -35,6 +35,12 @@ Welcome to Advance Auto Refresh, the most powerful and user-friendly tool to aut
 
 ## How to Use Advance Auto Refresh
 
+We are excited to announce that **Advance Auto Refresh** is now available on the **Chrome Web Store**! If you enjoy using the extension, help us spread the word and promote it to others.
+
+**[Download Advance Auto Refresh from the Chrome Web Store](https://chromewebstore.google.com/detail/advance-auto-refresh/hdendciklgimifhmgikbonnkbhcpniaj)**
+
+Leave a review, share your feedback, and help others discover how this powerful tool can boost productivity and simplify their browsing experience!
+
 ### Enabling the Extension
 
 At the very top of the popup, you will see a large toggle switch.
