@@ -3,7 +3,9 @@
 
 Welcome to Advance Auto Refresh, the most powerful and user-friendly tool to automatically refresh your browser tabs. Whether you need to monitor a webpage for changes, cycle through dashboards, or automate simple navigation, this extension has you covered with a beautiful and intuitive interface.
 
-![Extension Popup Interface](icons/Screenshot.png)
+![Extension Popup Interface](icons/ss1.jpg)
+
+![Extension Popup Interface](icons/ss2.jpg)
 
 ## Table of Contents
 
