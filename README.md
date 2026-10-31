@@ -92,8 +92,7 @@ Advanced mode is organized by "URL Cards". Each card contains the settings for o
 
 ## License
 
-This is a free and open-source extension. You are free to use, modify, and distribute it under the terms of the MIT public license.
-
+This is a free and open-source extension. You are free to use, modify, and distribute it under the terms of the MIT License.
 
 ## ©️ Copyright
 
